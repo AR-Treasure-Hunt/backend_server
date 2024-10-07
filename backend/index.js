@@ -15,7 +15,7 @@ const PORT = process.env.PORT;
 
 app.use("/u", userRoutes);
 app.use("/t", teamRoutes);
-app.use("/",scoreUpdate);
+app.use("/s",scoreUpdate);
 
 app.listen(PORT, () => {
   console.log(`Backend Running at PORT: ${PORT}`);
