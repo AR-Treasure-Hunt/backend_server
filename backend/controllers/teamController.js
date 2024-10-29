@@ -2,7 +2,12 @@ import { ViewTeamStatus, ValidateTeamCode, ValidateTeamName } from "../model/tea
 
 export const TeamStatus = async (req, res) => {
   try {
-    const teamCode = req.body.teamCode;
+    var teamCode = req.params.id;
+    if(teamCode==='teamName')
+    {
+      teamCode=null;
+    }
+    console.log(teamCode);
     const teamName=req.body.teamName;
     console.log(teamName);
 
