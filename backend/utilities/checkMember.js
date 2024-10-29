@@ -1,10 +1,13 @@
 import supabase from "../config/supabaseConnection.js";
 export const check_member = async (team_id) => {
   try {
+    console.log('Inside checkMember',team_id);
     const { data, error } = await supabase
       .from("player")
       .select("*")
       .eq("team_id", team_id);
+
+    console.log(data);
 
     if (error) {
       console.error("Error fetching members:", error.message);

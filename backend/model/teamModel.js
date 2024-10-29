@@ -4,6 +4,7 @@ import { check_member } from "../utilities/checkMember.js";
 
 export const CreateTeam = async (TeamDetails) => {
   try {
+    
     const { teamName, team_leader_email } = TeamDetails;
 
     const TeamCode = GenerateTeamCode();
@@ -54,11 +55,15 @@ export const CreateTeam = async (TeamDetails) => {
 };
 
 export const ValidateTeamCode = async (TeamCode) => {
+ 
   try {
+   
     const { data, error } = await supabase
       .from("team")
       .select("*")
       .eq("team_code", TeamCode);
+
+      
 
     if (error) {
       console.log("Error while validating code");
@@ -74,10 +79,10 @@ export const ValidateTeamCode = async (TeamCode) => {
       };
     }
   } catch (error) {
-    console.error("Error in ValidateCode function:", err.message);
+    console.error("Error in ValidateCode function:", error.message);
     return {
       success: false,
-      message: err.message,
+      message: error.message,
     };
   }
 };
@@ -114,7 +119,10 @@ export const MemberCount = async (team_id) => {
 
 export const ViewTeamStatus = async (team_id) => {
   // Get the team members associated with the team_id
+  
+  
   const memberData = await check_member(team_id);
+  
 
   if (!memberData.success) {
     return { success: false, message: memberData.message };
@@ -125,3 +133,33 @@ export const ViewTeamStatus = async (team_id) => {
     };
   }
 };
+
+export  const  ValidateTeamName= async (team_name)=>{
+try {  
+  const { data, error } = await supabase
+      .from("team")
+      .select("*")
+      .eq("team_name", team_name);
+
+      if (error) {
+        console.log("Error while validating Team Name");
+        return {
+          success: false,
+          message: error,
+        };
+      } else {
+        console.log(data);
+        return {
+          success: true,
+          teamId: data[0].team_id,
+          teamName: data[0].team_name,
+        };
+      }
+} catch (error) {
+  console.log('Error in validation using teamName',error.message);
+  return{
+    success:false,
+    message:error.message
+  };
+}
+}

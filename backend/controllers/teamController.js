@@ -1,23 +1,40 @@
-import { ViewTeamStatus, ValidateTeamCode } from "../model/teamModel.js";
+import { ViewTeamStatus, ValidateTeamCode, ValidateTeamName } from "../model/teamModel.js";
 
 export const TeamStatus = async (req, res) => {
   try {
-    const teamCode = req.params.id;
+    const teamCode = req.body.teamCode;
+    const teamName=req.body.teamName;
+    console.log(teamName);
+
 
     // Validate the provided team code
-    const validateTeam = await ValidateTeamCode(teamCode);
+    var validateTeam;
+    if(teamCode)
+    {
+      validateTeam = await ValidateTeamCode(teamCode);
+    }
 
+    else
+    {
+      validateTeam=await ValidateTeamName(teamName);
+    }
+        
+    console.log(TeamStatus);
     if (!validateTeam.success) {
       return res
         .status(500)
-        .json({ message: "Invalid Team Code", success: false });
+        .json({ message: "Invalid Input", success: false });
     }
 
     const team_id = validateTeam.teamId;
-    const teamName = validateTeam.teamName;
+    const team_name = validateTeam.teamName;
+
+    console.log(team_id,team_name);
 
     // Get the team status and members using the team_id
     const teamStatus = await ViewTeamStatus(team_id);
+
+    console.log(teamStatus);
 
     if (!teamStatus.success) {
       return res
@@ -27,7 +44,7 @@ export const TeamStatus = async (req, res) => {
 
     // Structure the response data with proper member assignment
     const responseData = {
-      teamName: teamName,
+      teamName: team_name,
       memberCount: teamStatus.members.length, // Get the count of actual members
       members: {
         player1: teamStatus.members[0] || "Not Assigned",

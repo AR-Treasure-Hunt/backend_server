@@ -7,14 +7,18 @@ import {
 
 export const RegisterByTeamCreation = async (req, res) => {
   try {
+    
+
     const { name, email, phone_number, institution, address, social_media } =
       req.body.userData;
     const { teamName } = req.body;
 
     const teamCreationDetails = { teamName, team_leader_email: email };
+    
 
     // Create a team
     const teamCreation = await CreateTeam(teamCreationDetails);
+    
 
     // Check if team creation was successful
     if (!teamCreation.success) {
