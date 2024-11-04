@@ -76,3 +76,100 @@ try {
     }
 
 }
+
+export const resultLeaderboard=async(req,res)=>{
+    try {
+        let { data: result, error } = await supabase
+        .from('scoreboard')
+        .select('team_name, final_score')
+        .order('final_score', { ascending: false })
+
+       
+        const filterdResult=[];
+
+        if(result)
+        {
+
+        result.forEach((element,i) => {  
+        
+
+        result.forEach((item,j)=>{
+            if(j>i && item.team_name===element.team_name)
+            {
+                var inclusion;
+                
+                if(filterdResult){
+                inclusion=filterdResult.some(component=>{
+                return component.team_name===item.team_name
+                })
+                }
+
+                else
+                inclusion=false;
+
+                if(!inclusion)
+                {
+                    filterdResult.push(item);
+
+                } 
+              
+            }
+            
+            else{
+                const include=result.every((component,k)=>{
+                    return k>i && component.team_name===element.team_name 
+                })
+
+                if(!include)
+                {
+                    const inclusion=filterdResult.some(component=>{
+                        return component.team_name===item.team_name
+                    })
+
+                    if(!inclusion)
+                    {
+                     filterdResult.push(item);
+        
+                    }
+                }    
+            }
+            
+        }
+   
+    )
+        
+
+}
+       
+    )
+
+    const finalresult=await filterdResult.map((variable,i)=>{
+        return {...variable,rank:i+1};
+    });
+
+
+    return{
+        success:true,
+        message:"Leaderboard successfully displayed",
+        data:finalresult
+    }
+}
+        else
+        {
+            return {
+                success:false,
+                message:error.message
+
+            }
+        }
+
+        
+    } catch (error) {
+        console.log(error);
+        return{
+            success:false,
+            message:error.message
+        }
+    }
+};
+

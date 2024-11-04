@@ -1,4 +1,5 @@
 import { updateScore } from "../model/scoreModel.js";
+import {resultLeaderboard} from "../model/scoreModel.js";
 
 export const update=async(req,res)=>{
     try {
@@ -38,4 +39,36 @@ export const update=async(req,res)=>{
          .json(error)
     }
 };
+
+
+export const leaderBoard=async(req,res)=>{
+    try {
+        const result=await resultLeaderboard();
+        
+        if(!result.success)
+            {
+                return res
+                .status(500)
+                .json({ message:result.message, success: false });
+            }
+    
+            else{
+                return res
+                .status(200)
+                .json({
+                    success:true,
+                    result:result.message,
+                    data:result.data
+                    
+                })
+            }
+
+        
+    } catch (error) {
+        console.log(error);  
+        return res
+         .json(error)
+    }
+};
+
 
